@@ -1,0 +1,103 @@
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script>
+      async function fetchVisitorsCount() {
+          try {
+              const response = await fetch('https://fcyskx0twa.execute-api.us-west-2.amazonaws.com/test/DynamoDBManager');
+              const data = await response.json();
+              const visitorsCount = data.body.visitorCount;
+              return visitorsCount;
+          } catch (error) {
+              console.error('Error fetching data:', error);
+          }
+      }
+          
+      async function renderVisitorsCount() {
+          const visitorsCount = await fetchVisitorsCount();
+      
+          if (!visitorsCount) {
+              return;
+          }
+          document.getElementById("header").innerHTML = "visitors count: " + visitorsCount;
+      
+      }
+      
+      // Call the renderData function to display data
+      renderVisitorsCount()
+      </script>
+    </head>
+<div id="header"></div>
+<div class="left"></div>
+<div class="stuff">
+  <br><br>
+
+  <br>
+
+  <p class="head">Interests</p>
+  <ul>
+    <li>Internet culture</li>
+    <li>Video Games</li>
+    <li>F1</li>
+  </ul>
+  <br>
+  <hr />
+  <br>
+  <p class="head">Education</p>
+  <ul>
+      <li> Informatics and
+        Econometrics
+        University of Gdańsk,
+        Bachelor's degree</li>
+      <li> Informatics and
+        Econometrics
+        University of Gdańsk,
+        Master's degree(ongoing)</li>
+  </ul>
+  <br>
+  <hr />
+  <br>
+  <p class="head">Experience</p>
+  <ul>
+    <li>Plan Supply Chain Intern</li>
+    <li>Intern Java Developer</li>
+    <li>Scan Worker</li>
+  </ul>
+  <br>
+  <hr />
+  <br>
+  <p class="head">Languages</p>
+  <ul>
+    <li>Polish</li>
+    <li>English</li>
+  </ul>
+  <br>
+  <hr />
+  <br>
+  <p class="head">Skills</p>
+  <ul>
+    <li>SQL</li>
+    <li>NoSQL</li>
+    <li>Dart</li>
+    <li>Flutter</li>
+    <li>Java</li>
+    <li>JavaScript</li>
+  </ul>
+  <br>
+  <hr />
+  <br>
+  <p class="head">Contact</p>
+  <ul>
+    <li>Michał Pochmara</li>
+    <li>+48 882 304 425</li>
+    <li> <a href="https://www.linkedin.com/in/michał-pochmara/">LinkedIn</a></li>
+    <li> <a href="https://github.com/Pochmannn">GitHub</a></li>
+  </ul>
+  <br>
+  I hereby give consent for my personal data to be processed
+  for the purpose of conducting recruitment for the position for
+  which I am applying
+</div>
+<div class="right"></div>
+<div id="footer"></div>
+  <h2 id="name"></h2></div>
