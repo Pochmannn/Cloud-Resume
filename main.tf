@@ -30,7 +30,7 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
   }
 
 }
-#adding item to the tablegit 
+#adding item to the table
 resource "aws_dynamodb_table_item" "basic-dynamodb-table" {
   table_name = aws_dynamodb_table.basic-dynamodb-table.name
   hash_key   = aws_dynamodb_table.basic-dynamodb-table.hash_key
@@ -47,4 +47,74 @@ resource "aws_dynamodb_table_item" "basic-dynamodb-table" {
 }
 ITEM
 }
+
+#making an S3 bucket
+resource "aws_s3_bucket" "cloudresume-bucket-tf" {
+  bucket  = "cloudresume-bucket-tf"
+}
+
+resource "aws_s3_bucket_public_access_block" "cloudresume-bucket-tf" {
+  bucket = aws_s3_bucket.cloudresume-bucket-tf.id
+
+  block_public_acls   = false
+  block_public_policy = false
+}
+
+resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
+  bucket = aws_s3_bucket.cloudresume-bucket-tf.id
+  policy = data.aws_iam_policy_document.allow_access_from_another_account.json
+}
+
+data "aws_iam_policy_document" "allow_access_from_another_account" {
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      aws_s3_bucket.cloudresume-bucket-tf.arn,
+      "${aws_s3_bucket.cloudresume-bucket-tf.arn}/*",
+    ]
+  }
+}
+
+resource "aws_s3_bucket_website_configuration" "static-s3-website" {
+  bucket = aws_s3_bucket.cloudresume-bucket-tf.id
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  # routing_rule {
+  #   condition {
+  #     key_prefix_equals = "docs/"
+  #   }
+  #   redirect {
+  #     replace_key_prefix_with = "documents/"
+  #   }
+  # }
+}
+#uploading files to S3 bucket
+resource "aws_s3_object" "cloudresume-s3-upload-index" {
+  bucket = "cloudresume-bucket-tf"
+  key    = "index.html"
+  source = "index.html"
+  content_type = "text/html"
+
+  etag = filemd5("index.html")
+}
+
+resource "aws_s3_object" "cloudresume-s3-upload-style" {
+  bucket = "cloudresume-bucket-tf"
+  key    = "style.css"
+  source = "style.css"
+
+  etag = filemd5("style.css")
+}
+
 
