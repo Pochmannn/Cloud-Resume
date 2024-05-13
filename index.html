@@ -4,9 +4,9 @@
     <script>
       async function fetchVisitorsCount() {
           try {
-              const response = await fetch('https://fcyskx0twa.execute-api.us-west-2.amazonaws.com/test/DynamoDBManager');
+              const response = await fetch('https://voxgnh2oth.execute-api.us-west-2.amazonaws.com/example-stage/example');
               const data = await response.json();
-              const visitorsCount = data.body.visitorCount;
+              const visitorsCount = data['visitorCount'];
               return visitorsCount;
           } catch (error) {
               console.error('Error fetching data:', error);

@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.16"
+      version = ">= 5.30"
     }
   }
 
@@ -236,4 +236,58 @@ resource "aws_lambda_function" "test_lambda" {
       databaseName = "VisitorsCount-tf"
     }
   }
+}
+
+#API Gateway
+resource "aws_apigatewayv2_api" "VisitorsCount-Api-tf" {
+  name          = "VisitorsCount-Api-tf"
+  protocol_type = "HTTP"
+
+  cors_configuration {
+      allow_credentials = false
+      allow_headers     = []
+      allow_methods     = [
+          "GET",
+          "OPTIONS",
+          "POST",
+      ]
+      allow_origins     = [
+          "*",
+      ]
+      expose_headers    = []
+      max_age           = 0
+  }
+}
+#Lambda integration
+resource "aws_apigatewayv2_integration" "test_lambda" {
+  api_id           = aws_apigatewayv2_api.VisitorsCount-Api-tf.id
+  integration_uri = aws_lambda_function.test_lambda.invoke_arn
+  integration_type = "AWS_PROXY"
+  integration_method = "POST"
+
+}
+#stage
+resource "aws_apigatewayv2_stage" "example" {
+  api_id = aws_apigatewayv2_api.VisitorsCount-Api-tf.id
+  name   = "example-stage"
+  auto_deploy = true
+}
+
+#lambda permission
+resource "aws_lambda_permission" "apigw" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.test_lambda.arn}"
+  principal     = "apigateway.amazonaws.com"
+
+
+  source_arn    = "${aws_apigatewayv2_api.VisitorsCount-Api-tf.execution_arn}/*/*/*"
+}
+
+#route
+resource "aws_apigatewayv2_route" "route-tf" {
+  api_id    = aws_apigatewayv2_api.VisitorsCount-Api-tf.id
+  route_key = "ANY /example"
+
+  target = "integrations/${aws_apigatewayv2_integration.test_lambda.id}"
 }

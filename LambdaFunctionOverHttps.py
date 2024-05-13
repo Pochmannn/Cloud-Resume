@@ -1,6 +1,7 @@
 import boto3
 import json
 import os
+import simplejson as json
 
 # define the DynamoDB table that Lambda will connect to
 tableName = os.environ['databaseName']
@@ -25,7 +26,8 @@ def lambda_handler(event, context):
             'id' : 'A1'
         }
     )
-    item = response['Item']
+    item = json.dumps(response['Item'])
+    
     return {
         "isBase64Encoded": False,
         "statusCode": 200,
