@@ -6,6 +6,16 @@ terraform {
     }
   }
 
+  backend "remote" {
+        # The name of your Terraform Cloud organization.
+        organization = "MPoch"
+
+        # The name of the Terraform Cloud workspace to store Terraform state files in.
+        workspaces {
+          name = "cloud-resume"
+        }
+      }
+
   required_version = ">= 1.2.0"
 }
 
