@@ -1,1 +1,2 @@
-![AWS architecture diagram](https://github.com/Pochmannn/Cloud-Resume/assets/73834683/e81ebe21-e06f-4c88-ba8d-94643353d90b)
+
+![AWS architecture diagram](https://github.com/Pochmannn/Cloud-Resume/assets/73834683/7499a30d-8846-419e-9a2e-52c10fec9d4d)
